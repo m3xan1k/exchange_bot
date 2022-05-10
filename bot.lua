@@ -89,9 +89,10 @@ end
 ---@return table
 bot.parse_currencies = function (xml)
     local currencies = {}
-    local parser = xml2lua.parser(xmlhandler)
+    local handler = xmlhandler:new()
+    local parser = xml2lua.parser(handler)
     parser:parse(xml)
-    for _, valute in ipairs(xmlhandler.root.ValCurs.Valute) do
+    for _, valute in ipairs(handler.root.ValCurs.Valute) do
         local value = tonumber(valute.Value:gsub(',', '.'):format("%.2f"))
         currencies[valute.CharCode] = {
             name = valute.Name,
@@ -127,3 +128,6 @@ bot.process_message = function (message)
     local text = string.format('```\n%s\n%.2f\n```', choice.name, choice.value)
     bot.send_message(message.chat.id, text)
 end
+
+
+return bot
